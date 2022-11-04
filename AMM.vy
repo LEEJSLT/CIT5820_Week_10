@@ -68,8 +68,7 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 # If the message sender was the initial liquidity provider, this should give all tokens held by the contract to the message sender, otherwise it should fail.
 @external
 def ownerWithdraw():
-    assert self.owner == msg.sender
-	#Your code here
+	assert self.owner == msg.sender
 	self.tokenA.transfer(self.owner, self.tokenAQty)
 	self.tokenB.transfer(self.owner, self.tokenBQty)
 	selfdestruct(self.owner)
