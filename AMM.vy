@@ -28,15 +28,16 @@ def provideLiquidity(tokenA_addr: address, tokenB_addr: address, tokenA_quantity
 	#both tokenA_addr & tokenB_addr to be vvalid ERC20 contracts
 	self.tokenA = ERC20(tokenA_addr)
 	self.tokenB = ERC20(tokenB_addr)
+	self.tokenAQty = tokenA_quantity
+	self.tokenBQty = tokenB_quantity
+	self.owner = msg.sender
 
 	#token transfer with the quantity of tokenA_quantity and tokenB_quantity
 	self.tokenA.transferFrom(msg.sender, self, tokenA_quantity)
 	self.tokenB.transferFrom(msg.sender, self, tokenB_quantity)
 
 	#The sender corresponds to the address which provides liquidity (and therefore is the owner)
-	self.owner = msg.sender
-	self.tokenAQty = tokenA_quantity
-	self.tokenBQty = tokenB_quantity
+	
 	
 	#tokenAQty*tokenBQty = invariant throughout the life of the contract
 	self.invariant = self.tokenAQty * self.tokenBQty
