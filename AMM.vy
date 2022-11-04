@@ -43,12 +43,12 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 	if sell_token == self.tokenA.address: # sell_token matches with tokenA_addr
 		self.tokenA.transferFrom(msg.sender, self, sell_quantity)
 		self.tokenAQty = self.tokenAQty + sell_quantity
-		self.tokenA.transfer(self.tokenA_addr, self.tokenAQty)
+		self.tokenA.transfer(self, self.tokenAQty)
 		
 	elif sell_token == self.tokenB.address: # sell_token matches with tokenB_addr
 		self.tokenB.transferFrom(msg.sender, self, sell_quantity)
 		self.tokenBQty = self.tokenBQty + sell_quantity
-		self.tokenB.transfer(self.tokenB_addr, self.tokenBQty)
+		self.tokenB.transfer(self, self.tokenBQty)
 
 
 # Owner can withdraw their funds and destroy the market maker
