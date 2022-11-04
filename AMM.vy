@@ -58,9 +58,9 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
         send(self, self.tokenAQty) # return to the sender
 		
 	elif sell_token == self.tokenB.address:
-    	self.tokenB.transferFrom(msg.sender, self, sell_quantity)
-        self.tokenBQty = self.tokenBQty + sell_quantity
-        send(self, self.tokenBQty) # return to the sender
+		self.tokenB.transferFrom(msg.sender, self, sell_quantity)
+		self.tokenBQty = self.tokenBQty + sell_quantity
+		send(self, self.tokenBQty) # return to the sender
 
 
 # Owner can withdraw their funds and destroy the market maker
