@@ -50,7 +50,6 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 		self.tokenBQty = self.tokenBQty + sell_quantity
 		self.sell_token.transfer(self, self.tokenBQty)
 
-
 # Owner can withdraw their funds and destroy the market maker
 # ownerWithdraw()
 # If the message sender was the initial liquidity provider, this should give all tokens held by the contract to the message sender, otherwise it should fail.
