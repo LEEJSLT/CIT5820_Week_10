@@ -22,13 +22,13 @@ def provideLiquidity(tokenA_addr: address, tokenB_addr: address, tokenA_quantity
 	assert self.invariant == 0 #This ensures that liquidity can only be provided once
 	#Your code here
 	self.owner = msg.sender # The sender corresponds to the address which provides liquidity (and therefore is the owner)
-	self.tokenA = ERC20(tokenA_addr) # Both tokenA_addr and tokenB_addr should be addresses of valid ERC20 contracts, 
-	self.tokenB = ERC20(tokenB_addr)
-	self.tokenAQty = tokenA_quantity # and tokenA_quantity and tokenB_quantity should be the quantities of each token that are being deposited. 
-	self.tokenBQty = tokenB_quantity
-	self.tokenA.transferFrom(msg.sender, self, tokenA_quantity) # token transfer with the quantity of tokenA_quantity and tokenB_quantity
-	self.tokenB.transferFrom(msg.sender, self, tokenB_quantity)
-	self.invariant = self.tokenAQty * self.tokenBQty # tokenAQty*tokenBQty = invariant throughout the life of the contract
+	self.tokenA = ERC20(tokenA_addr) # tokenA_addr should be addresses of valid ERC20 contracts
+	self.tokenB = ERC20(tokenB_addr) # tokenB_addr should be addresses of valid ERC20 contracts
+	self.tokenAQty = tokenA_quantity # tokenA_quantity should be the quantities of each token that are being deposited. 
+	self.tokenBQty = tokenB_quantity # tokenB_quantity should be the quantities of each token that are being deposited. 
+	self.tokenA.transferFrom(msg.sender, self, tokenA_quantity) # token transfer with the quantity of tokenA_quantity
+	self.tokenB.transferFrom(msg.sender, self, tokenB_quantity) # token transfer with the quantity of tokenB_quantity
+	self.invariant = self.tokenAQty * self.tokenBQty # tokenAQty * tokenBQty = invariant
 
 	assert self.invariant > 0
 
@@ -41,12 +41,12 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 	assert sell_token == self.tokenA.address or sell_token == self.tokenB.address
 	#Your code here
 	if sell_token == self.tokenA.address: # if the sell_token matches with tokenA_addr
-		self.tokenA.transferFrom(msg.sender, self, sell_quantity)
+		self.tokenA.transferFrom(msg.sender, self, sell_quantity) # transfer token from sender to tokenA
 		self.tokenAQty = self.tokenAQty + sell_quantity # tokenAQty to be updated
 
-		receive_token: uint256 = self.tokenBQty - self.invariant / self.tokenAQty # updated token_B after the convert
-		self.tokenB.transfer (msg.sender, receive_token)
-		self.tokenBQty = self.invariant / self.tokenAQty
+		receive_token: uint256 = self.tokenBQty - self.invariant / self.tokenAQty # updated token_B after the trade
+		self.tokenB.transfer (msg.sender, receive_token) # return the sender updated tokenB amount
+		self.tokenBQty = self.invariant / self.tokenAQty # update tokenBQty in the contract
 	
 		# self.tokenA.transfer(self, self.tokenAQty)
 		# sellBQty: uint256 = self.invariant / sell_quantity
@@ -62,17 +62,16 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 		# self.tokenB.transferFrom(msg.sender, self, sell_quantity)
 
 	elif sell_token == self.tokenB.address: # sell_token matches with tokenB_addr
-		self.tokenB.transferFrom(msg.sender, self, sell_quantity)
-		self.tokenBQty = self.tokenBQty + sell_quantity
+		self.tokenB.transferFrom(msg.sender, self, sell_quantity) # transfer token from sender to tokenA
+		self.tokenBQty = self.tokenBQty + sell_quantity # tokenAQty to be updated
+
+		receive_token: uint256 = self.tokenAQty - self.invariant / self.tokenBQty # updated token_B after the convert
+		self.tokenA.transfer (msg.sender, receive_token) # return the sender updated tokenB amount
+		self.tokenAQty = self.invariant / self.tokenBQty # update tokenBQty in the contract
 		# self.tokenB.transfer(self, self.tokenBQty)
 		# sellAQty: uint256 = self.invariant / sell_quantity
 		# self.tokenA.transfer (msg.sender, sell_quantity)
 		# self.tokenAQty = self.tokenAQty - sell_quantity
-
-		receive_token: uint256 = self.tokenAQty - self.invariant / self.tokenBQty # updated token_B after the convert
-		self.tokenA.transfer (msg.sender, receive_token)
-		self.tokenAQty = self.invariant / self.tokenBQty
-
 		# self.tokenAQty = self.tokenAQty + self.invariant / sell_quantity
 		# self.tokenA.transfer (self, self.tokenAQty)
 		# self.tokenA.transfer(self, sell_quantity)
