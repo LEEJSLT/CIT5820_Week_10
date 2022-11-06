@@ -42,10 +42,12 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 	#Your code here
 	if sell_token == self.tokenA.address: # if the sell_token matches with tokenA_addr
 		self.tokenA.transferFrom(msg.sender, self, sell_quantity)
-		self.tokenAQty = self.tokenAQty - sell_quantity # tokenAQty to be updated
+		self.tokenAQty = self.tokenAQty + sell_quantity # tokenAQty to be updated
 		# self.tokenA.transfer(self, self.tokenAQty)
 		# sellBQty: uint256 = self.invariant / sell_quantity
 		# self.tokenBQty = self.tokenBQty - invariant / sell_quantity
+
+		new_total_tokens: uint256 = self.invariant / self.tokenAQty
 
 		
 
@@ -53,8 +55,8 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 
 
 
-		self.tokenB.transfer (msg.sender, sell_quantity)
-		self.tokenBQty = self.tokenBQty + sell_quantity
+		self.tokenB.transfer (msg.sender, new_total_tokens)
+		self.tokenBQty = self.tokenBQty - new_total_tokens
 		# self.tokenBQty = self.tokenBQty + self.invariant / sell_quantity
 		# self.tokenB.transfer (self, self.tokenBQty)
 		# self.tokenB.transfer(self, sell_quantity)
@@ -62,12 +64,12 @@ def tradeTokens(sell_token: address, sell_quantity: uint256):
 
 	elif sell_token == self.tokenB.address: # sell_token matches with tokenB_addr
 		self.tokenB.transferFrom(msg.sender, self, sell_quantity)
-		self.tokenBQty = self.tokenBQty - sell_quantity
+		self.tokenBQty = self.tokenBQty + sell_quantity
 		# self.tokenB.transfer(self, self.tokenBQty)
 
 		# sellAQty: uint256 = self.invariant / sell_quantity
 		self.tokenA.transfer (msg.sender, sell_quantity)
-		self.tokenAQty = self.tokenAQty + sell_quantity
+		self.tokenAQty = self.tokenAQty - sell_quantity
 
 
 
